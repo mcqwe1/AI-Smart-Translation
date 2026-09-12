@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 306px; padding: 14px 14px 12px;
+      font: 13px/1.6 system-ui, "Microsoft YaHei", sans-serif; color: #1f2937; background: #fff;
+    }
+    .head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .logo {
+      width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+      background: linear-gradient(135deg, #60a5fa, #6366f1);
+      color: #fff; font-size: 15px; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .title { font-size: 15px; font-weight: 700; }
+    .sub { font-size: 11px; color: #94a3b8; }
+    .status {
+      display: flex; align-items: flex-start; gap: 7px; padding: 8px 10px; border-radius: 8px;
+      background: #f8fafc; border: 1px solid #eef1f6; margin-bottom: 4px; color: #475569;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; flex-shrink: 0; margin-top: 6px; }
+    .dot.on { background: #22c55e; }
+    .dot.off { background: #ef4444; }
+    .status-line { flex: 1 1 auto; }
+    .retry-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+    label { display: block; font-size: 12px; color: #64748b; margin: 8px 0 4px; }
+    select {
+      width: 100%; padding: 6px 8px; border: 1px solid #dbe1ea; border-radius: 8px;
+      font-size: 13px; background: #fff; color: #1f2937; outline: none;
+    }
+    .opts { margin-top: 10px; border: 1px solid #eef1f6; border-radius: 8px; overflow: hidden; }
+    .opt {
+      display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #f8fafc;
+    }
+    .opt + .opt { border-top: 1px solid #eef1f6; }
+    .opt .name { flex: 1 1 auto; font-size: 12.5px; color: #334155; }
+    .opt .kbd {
+      font-size: 10.5px; color: #94a3b8; border: 1px solid #e2e8f0; border-radius: 4px;
+      padding: 0 4px; background: #fff;
+    }
+    .opt input[type="checkbox"] { width: 15px; height: 15px; accent-color: #6366f1; cursor: pointer; }
+    button {
+      width: 100%; margin-top: 10px; padding: 8px 0; border: none; border-radius: 8px;
+      font-size: 13px; cursor: pointer; background: linear-gradient(135deg, #60a5fa, #6366f1); color: #fff;
+    }
+    button.ghost { background: #f1f5f9; color: #475569; margin-top: 8px; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .row { display: flex; gap: 8px; }
+    .row button { flex: 1 1 0; font-size: 12.5px; padding: 7px 0; }
+    .links { display: flex; justify-content: space-between; margin-top: 10px; }
+    .link { font-size: 12px; color: #6366f1; cursor: pointer; text-decoration: none; }
+    .hint { margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; font-size: 11px; color: #94a3b8; }
+    .hint b { color: #64748b; }
+    .hint .kbd {
+      font-size: 10px; color: #64748b; border: 1px solid #e2e8f0; border-radius: 3px;
+      padding: 0 3px; background: #f8fafc;
+    }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <span class="logo">狐</span>
+    <span>
+      <div class="title">狐译 · 划词翻译</div>
+      <div class="sub">划词 / 输入框 / 图片 / 悬停 / 整页翻译</div>
+    </span>
+  </div>
+
+  <div class="status">
+    <span id="dot" class="dot"></span>
+    <span id="statusText" class="status-line">正在检测狐译客户端…</span>
+  </div>
+  <div class="retry-row"><a id="btnRecheck" class="link">重新连接</a></div>
+
+  <label for="lang">译文语言（对所有网页生效）</label>
+  <select id="lang"></select>
+
+  <label for="selMode">划词译文怎么显示</label>
+  <select id="selMode">
+    <option value="replace">替换原文（译文顶掉原文）</option>
+    <option value="below">放在原文下方（原文保留）</option>
+    <option value="popup">弹窗展示（不改动网页）</option>
+  </select>
+
+  <div class="opts">
+    <div class="opt">
+      <span class="name">划词悬浮球（选中文字后点球即翻）</span>
+      <input type="checkbox" id="optBall">
+    </div>
+    <div class="opt">
+      <span class="name">输入框翻译（打完字连按三下空格）</span>
+      <span class="kbd">空格×3</span>
+      <input type="checkbox" id="optInput">
+    </div>
+    <div class="opt">
+      <span class="name">鼠标悬停翻译（停在段落上自动翻）</span>
+      <span class="kbd">Alt+H</span>
+      <input type="checkbox" id="optHover">
+    </div>
+  </div>
+
+  <button id="btnPage">翻译整个当前网页</button>
+  <div class="row">
+    <button id="btnSource" class="ghost">显示原文</button>
+    <button id="btnTarget" class="ghost">显示译文</button>
+    <button id="btnToggle" class="ghost">切换</button>
+  </div>
+
+  <div class="links">
+    <a id="openApp" class="link">打开狐译网页版</a>
+    <a id="openShortcuts" class="link">修改快捷键</a>
+  </div>
+
+  <div class="hint">
+    <b>划词</b>：选中文字 → 点悬浮球 / 右键菜单 / <span class="kbd">Alt+T</span>。<br>
+    <b>输入框</b>：任意输入框里打完字，<b>连按三下空格</b>即翻。<br>
+    <b>图片</b>：右键图片 → “狐译（翻译这张图片）”，结果浮层可拖动、位置会记住。<br>
+    <b>整页</b> <span class="kbd">Alt+P</span>（动态加载的新内容会自动追译）　<b>原文/译文切换</b> <span class="kbd">Alt+R</span><br>
+    译文本地缓存，来回切换不再调用大模型。刚安装扩展后，已打开的页面需<b>刷新一次</b>才能使用。
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

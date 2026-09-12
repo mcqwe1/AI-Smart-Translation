@@ -1,0 +1,57 @@
+# User data, personal configuration and secrets
+/data/
+/backups/
+/diagnostics/
+.env
+.env.*
+!.env.example
+*.secret
+*.pem
+*.key
+credentials*.json
+
+# Logs and caches
+*.log
+*.log.*
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+.venv/
+venv/
+
+# Bundled runtimes, large models and compiled distribution files
+/ai-service/python/
+/ai-service/models/
+/ai-service/babeldoc-assets/
+/runtime/
+/bin/
+/app/
+node_modules/
+dist/
+build/
+target/
+*.jar
+*.class
+*.exe
+*.dll
+*.bin
+*.onnx
+*.safetensors
+*.pt
+*.pth
+
+# Archives, backup copies and local tooling
+*.zip
+*.rar
+*.7z
+*.bak
+*.bak-*
+*.tmp
+*.part
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
